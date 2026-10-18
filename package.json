@@ -1,0 +1,41 @@
+{
+  "name": "relaydb",
+  "version": "0.1.0",
+  "description": "RelayDB — Seamlessly relay, sanitize, and prune live databases into clean local seed data.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "prepare": "svelte-kit sync || echo ''",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "tauri": "tauri",
+    "engine:build": "bun run scripts/build-engine.ts",
+    "engine:selftest": "cd engine && go run ./cmd/relaydb-engine --selftest",
+    "engine:headless": "cd engine && go run ./cmd/relaydb-engine",
+    "engine:test": "cd engine && go test ./...",
+    "engine:repro": "bun run scripts/check-reproducible.ts",
+    "protocol:check": "bun run scripts/check-protocol.ts",
+    "check:all": "bun run engine:test && bun run engine:repro && bun run check && bun run protocol:check",
+    "dev:all": "bun run engine:build && tauri dev"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-opener": "^2",
+    "lucide-svelte": "^1.0.1"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-static": "^3.0.10",
+    "@sveltejs/kit": "^2.65.1",
+    "@sveltejs/vite-plugin-svelte": "^7.1.2",
+    "@tailwindcss/vite": "^4.1.18",
+    "svelte": "^5.56.3",
+    "svelte-check": "^4.6.0",
+    "tailwindcss": "^4.1.18",
+    "typescript": "~6.0.3",
+    "vite": "^8.0.16",
+    "@tauri-apps/cli": "^2"
+  }
+}

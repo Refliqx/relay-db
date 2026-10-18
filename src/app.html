@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en-GB" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%sveltekit.assets%/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark light" />
+    <title>RelayDB: Database Seed Builder</title>
+    <script>
+      // Apply the saved theme BEFORE the first paint, so light-theme users do
+      // not see a dark flash during hydration.
+      try {
+        const t = localStorage.getItem("relaydb.theme");
+        if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+      } catch (_) {
+        /* localStorage blocked: use default */
+      }
+    </script>
+    %sveltekit.head%
+  </head>
+  <body data-sveltekit-preload-data="hover">
+    <div style="display: contents">%sveltekit.body%</div>
+  </body>
+</html>

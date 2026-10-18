@@ -1,0 +1,214 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://relaydb.app/schemas/relaydb.schema.json",
+  "title": "RelayDB preset",
+  "description": "RelayDB configuration file (.relaydb.yaml). One file can hold multiple connection profiles + masking/pruning rules + export preferences. Safe to commit to the user's application repo.",
+  "type": "object",
+  "required": ["version"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "integer",
+      "const": 1,
+      "description": "File schema version. The engine rejects a version newer than it supports."
+    },
+    "profile": {
+      "$ref": "#/$defs/profile",
+      "description": "Compact form for a single profile."
+    },
+    "profiles": {
+      "type": "array",
+      "description": "Several profiles at once (e.g. local, staging, production) in one file.",
+      "items": { "$ref": "#/$defs/profile" }
+    },
+    "selection": {
+      "type": "array",
+      "description": "Table selection. If empty, all tables (except views) are exported.",
+      "items": { "$ref": "#/$defs/selection" }
+    },
+    "masking": {
+      "type": "array",
+      "description": "Masking rule per column. Order does not matter, but sorting them keeps the Git diff stable.",
+      "items": { "$ref": "#/$defs/maskRule" }
+    },
+    "pruning": {
+      "type": "array",
+      "description": "Pruning of the number of rows per table.",
+      "items": { "$ref": "#/$defs/pruneRule" }
+    },
+    "export": { "$ref": "#/$defs/exportOptions" }
+  },
+  "allOf": [
+    {
+      "description": "At least one profile form must be present.",
+      "anyOf": [{ "required": ["profile"] }, { "required": ["profiles"] }]
+    }
+  ],
+  "$defs": {
+    "profile": {
+      "type": "object",
+      "required": ["id"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9._-]+$",
+          "description": "Unique profile identity within the file (used by the --profile flag in headless mode)."
+        },
+        "name": { "type": "string", "description": "Display name in the UI." },
+        "kind": {
+          "type": "string",
+          "enum": ["postgres", "mysql", "mariadb", "sqlite", "turso"],
+          "description": "Database kind. May be left empty when `dsn` uses a recognised scheme."
+        },
+        "dsn": {
+          "type": "string",
+          "description": "Full DSN/connection string. If set, the structured fields (host/user/...) are ignored. Supports ${ENV_VAR} expansion."
+        },
+        "host": { "type": "string" },
+        "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
+        "database": { "type": "string" },
+        "user": { "type": "string" },
+        "password": {
+          "type": "string",
+          "description": "Do NOT store literal. Use ${ENV_VAR} or ${ENV_VAR:-default}."
+        },
+        "file": { "type": "string", "description": "SQLite file path." },
+        "authToken": {
+          "type": "string",
+          "description": "Turso/libsql token. Use ${TURSO_TOKEN}."
+        },
+        "sslMode": { "type": "string", "enum": ["disable", "prefer", "require", "skip-verify"] },
+        "params": {
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "description": "Extra parameters forwarded to the driver (e.g. search_path, timezone)."
+        },
+        "readOnly": {
+          "type": "boolean",
+          "default": true,
+          "description": "RelayDB always opens a read-only session; this flag marks the profile's intent for audit."
+        },
+        "connectTimeoutMs": { "type": "integer", "minimum": 500, "maximum": 120000, "default": 10000 }
+      }
+    },
+    "selection": {
+      "type": "object",
+      "required": ["table", "include"],
+      "additionalProperties": false,
+      "properties": {
+        "schema": { "type": "string" },
+        "table": { "type": "string" },
+        "include": { "type": "boolean" }
+      }
+    },
+    "maskRule": {
+      "type": "object",
+      "required": ["table", "column", "strategy"],
+      "additionalProperties": false,
+      "properties": {
+        "table": { "type": "string" },
+        "column": { "type": "string" },
+        "strategy": {
+          "type": "string",
+          "enum": [
+            "keep",
+            "nullify",
+            "fixed",
+            "scramble",
+            "redact",
+            "hash_sha256",
+            "default_hash",
+            "fake_email",
+            "fake_name",
+            "fake_phone",
+            "fake_uuid",
+            "random_int",
+            "sequential",
+            "fake_address",
+            "fake_company",
+            "json_scrub"
+          ]
+        },
+        "options": {
+          "type": "object",
+          "description": "Strategy-specific options. Example: fake_email -> {domain, style}; scramble -> {keep_prefix, keep_suffix}; default_hash -> {algo, value}.",
+          "additionalProperties": true
+        },
+        "enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "false = the rule is stored as a note but not executed."
+        }
+      }
+    },
+    "pruneRule": {
+      "type": "object",
+      "required": ["table"],
+      "additionalProperties": false,
+      "properties": {
+        "table": { "type": "string" },
+        "limit": {
+          "type": ["integer", "null"],
+          "minimum": 0,
+          "description": "null/0 = all rows."
+        },
+        "where": {
+          "type": "string",
+          "description": "Additional WHERE clause (read expressions only). Write tokens (DELETE/UPDATE/;--) are rejected by the engine."
+        },
+        "orderBy": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["column"],
+            "additionalProperties": false,
+            "properties": {
+              "column": { "type": "string" },
+              "direction": { "type": "string", "enum": ["asc", "desc"], "default": "asc" }
+            }
+          }
+        },
+        "mode": { "type": "string", "enum": ["sample", "head", "tail", "all"] }
+      }
+    },
+    "exportOptions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "outputPath": { "type": "string", "default": "seeds/seed.sql" },
+        "dialect": { "type": "string", "enum": ["postgres", "mysql", "sqlite", "turso"] },
+        "batchSize": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000,
+          "default": 100,
+          "description": "Rows per INSERT statement. 100 = a trade-off between file size and ease of reviewing the diff."
+        },
+        "fetchSize": { "type": "integer", "minimum": 1, "default": 1000 },
+        "wrapTransaction": { "type": "boolean", "default": true },
+        "fkGuard": {
+          "type": "boolean",
+          "default": true,
+          "description": "Include the FK-disable command when the graph has cycles."
+        },
+        "includeDdl": { "type": "boolean", "default": false },
+        "includeHeader": { "type": "boolean", "default": true },
+        "headerTimestamp": {
+          "type": "boolean",
+          "default": false,
+          "description": "false = byte-identical output across runs with the same seed (clean Git diff)."
+        },
+        "upsert": { "type": "boolean", "default": false },
+        "seed": {
+          "type": "string",
+          "default": "relaydb-default-seed",
+          "description": "Masking determinism seed. Change = a completely different fake dataset."
+        },
+        "splitPerTable": { "type": "boolean", "default": false },
+        "prettyPrint": { "type": "boolean", "default": false },
+        "progressEveryN": { "type": "integer", "minimum": 1, "default": 500 }
+      }
+    }
+  }
+}

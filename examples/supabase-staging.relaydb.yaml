@@ -1,0 +1,63 @@
+# .relaydb.yaml: cloud profile (Supabase/Neon/Turso).
+#
+# Storing cloud credentials in a committed file is dangerous, so all secrets
+# use environment variable expansion: ${VAR} or ${VAR:-default}.
+# The engine expands them on load, so this file stays safe to share.
+version: 1
+
+profiles:
+  - id: supabase-staging
+    name: Supabase Staging
+    kind: postgres
+    dsn: postgres://${SUPABASE_STAGING_USER}:${SUPABASE_STAGING_PASSWORD}@db.xxxx.supabase.co:5432/postgres?sslmode=require
+    readOnly: true
+    connectTimeoutMs: 15000
+
+  - id: neon-production
+    name: Neon Production (read replica)
+    kind: postgres
+    dsn: ${NEON_DATABASE_URL}
+    readOnly: true
+    connectTimeoutMs: 15000
+    params:
+      # Read-only replica: saves cost & removes the risk of writes.
+      options: "-c default_transaction_read_only=on"
+
+  - id: turso-main
+    name: Turso Main
+    kind: turso
+    host: my-db-org.turso.io
+    authToken: ${TURSO_AUTH_TOKEN}
+    readOnly: true
+
+masking:
+  - { table: users, column: email, strategy: fake_email, options: { domain: example.com } }
+  - { table: users, column: password_hash, strategy: default_hash, options: { algo: bcrypt, value: password123 } }
+  - { table: users, column: full_name, strategy: fake_name }
+  - { table: users, column: phone_number, strategy: fake_phone, options: { country_code: "+62" } }
+  - { table: users, column: national_id, strategy: redact, options: { keep_start: 4, keep_end: 4 } }
+  # Raw tokens in JSON columns (common in Laravel/Next.js applications)
+  - table: user_settings
+    column: payload
+    strategy: json_scrub
+    options:
+      keys: { token: hash_sha256, refresh_token: hash_sha256, phone: fake_phone, email: fake_email }
+  # Address columns
+  - { table: addresses, column: street, strategy: fake_address }
+  - { table: addresses, column: latitude, strategy: nullify }
+  - { table: addresses, column: longitude, strategy: nullify }
+
+pruning:
+  - table: audit_logs
+    limit: 1000
+    orderBy: [{ column: id, direction: desc }]
+  - { table: sessions, limit: 500 }
+  - { table: notifications, limit: 1000 }
+
+export:
+  outputPath: ./seeds/staging.seed.sql
+  batchSize: 100
+  wrapTransaction: true
+  fkGuard: true
+  splitPerTable: true
+  seed: relaydb-supabase-staging

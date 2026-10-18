@@ -1,0 +1,70 @@
+# .relaydb.yaml: local profile example (XAMPP/Laragon).
+# Safe to commit: there are no literal credentials inside it.
+version: 1
+
+profiles:
+  - id: local-mysql
+    name: MySQL Local (XAMPP)
+    kind: mysql
+    host: 127.0.0.1
+    port: 3306
+    database: shop_dev
+    user: root
+    password: ${MYSQL_LOCAL_PASSWORD:-}
+    sslMode: disable
+    readOnly: true
+    connectTimeoutMs: 5000
+
+  - id: local-sqlite
+    name: SQLite Local
+    kind: sqlite
+    file: ./storage/app.sqlite
+    readOnly: true
+
+selection:
+  - { table: users, include: true }
+  - { table: posts, include: true }
+  - { table: comments, include: true }
+  - { table: tags, include: true }
+  - { table: post_tags, include: true }
+  - { table: activity_logs, include: true }
+
+masking:
+  # Identity & credentials
+  - { table: users, column: email, strategy: fake_email, options: { domain: example.com, style: first.last } }
+  - { table: users, column: password, strategy: default_hash, options: { algo: bcrypt, value: password123 } }
+  - { table: users, column: phone, strategy: fake_phone, options: { country_code: "+62", length: 11 } }
+  - { table: users, column: name, strategy: fake_name }
+  # JSON columns: mask sensitive values INSIDE the JSON, not drop the column
+  - table: users
+    column: settings
+    strategy: json_scrub
+    options:
+      keys:
+        token: hash_sha256
+        phone: fake_phone
+        password: default_hash
+  # Free text from users
+  - { table: comments, column: body, strategy: scramble }
+
+pruning:
+  # Logs are often millions of rows, but all of them are never needed.
+  - table: activity_logs
+    limit: 2000
+    orderBy:
+      - { column: created_at, direction: desc }
+  # Read filter example
+  - table: posts
+    limit: 500
+    where: "status = 'published'"
+    orderBy:
+      - { column: created_at, direction: desc }
+
+export:
+  outputPath: ./seeds/dev.seed.sql
+  batchSize: 100
+  wrapTransaction: true
+  fkGuard: true
+  includeHeader: true
+  headerTimestamp: false
+  seed: relaydb-local-seed
