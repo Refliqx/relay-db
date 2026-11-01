@@ -18,10 +18,14 @@
     "engine:repro": "bun run scripts/check-reproducible.ts",
     "protocol:check": "bun run scripts/check-protocol.ts",
     "check:all": "bun run engine:test && bun run engine:repro && bun run check && bun run protocol:check",
-    "dev:all": "bun run engine:build && tauri dev"
+    "dev:all": "bun run engine:build && tauri dev",
+    "site:dev": "cd website && bun run dev",
+    "site:build": "cd website && bun run build"
   },
   "license": "MIT",
   "dependencies": {
+    "@fontsource-variable/geist": "^5.3.0",
+    "@fontsource-variable/geist-mono": "^5.3.0",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "^2",
     "lucide-svelte": "^1.0.1"

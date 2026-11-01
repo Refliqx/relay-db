@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en-GB" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark light" />
+    <title>RelayDB: live data in, clean seeds out</title>
+    <meta
+      name="description"
+      content="RelayDB relays, masks and prunes a live database into a reproducible seed file your team can run locally. Production rows never leave your machine."
+    />
+    <meta property="og:title" content="RelayDB: live data in, clean seeds out" />
+    <meta
+      property="og:description"
+      content="A desktop tool that turns a live database into clean, reproducible seed data. Read-only, local-first, open source."
+    />
+    <meta property="og:type" content="website" />
+    <script>
+      // Apply the saved theme before the first paint, matching the desktop app.
+      try {
+        const t = localStorage.getItem("relaydb.theme");
+        if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+      } catch (_) {
+        /* localStorage blocked: keep the dark default */
+      }
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

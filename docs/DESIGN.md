@@ -15,14 +15,14 @@ eight hours a day (calm, dense, precise), not like a marketing page.
 1. **Calm by default.** Colour, motion, and shadow are *signals*, not
    decoration. The majority of cells, rows, and panels must be flat. Colour is
    only used once something needs attention (error, FK cycle, unmasked PII).
-2. **One accent only.** The accent (teal) is reserved for: primary actions, the
-   active step, selection, and the focus ring. No decorative gradients, no
-   second accent.
+2. **One accent only.** The accent (ocean blue) is reserved for: primary
+   actions, the active step, selection, and the focus ring. No decorative
+   gradients, no second accent.
 3. **Depth from lines, not shadows.** The `canvas → surface → raised → overlay`
    stack is separated by 1px hairline borders. Shadows are only for elements
    that genuinely float (command palette, dialogs).
-4. **Radius hierarchy, not uniform radius.** Controls 4px, panels 6px, overlays
-   10px. No `rounded-full` on buttons/badges (pill spam is a template tell).
+4. **Radius hierarchy, not uniform radius.** Controls 6px, panels 8px, overlays
+   12px. No `rounded-full` on buttons (pill spam is a template tell).
 5. **Dense but deliberately airy.** Table rows ~30px, text 12–13px, numbers use
    `tabular-nums` so columns line up. Density is a feature, not a problem to be
    patched with whitespace.
@@ -45,10 +45,11 @@ section 7.
 
 ## 2. Tokens
 
-All colours are defined as CSS variables in `src/app.css` and then mapped to
-Tailwind via `@theme inline`. Because that mapping uses `var()`, switching themes
-does **not** require a class rebuild: a single `data-theme` attribute on `<html>`
-is enough.
+All colours, type stacks and radius scales are defined in `design/tokens.css`,
+shared by the desktop app and the marketing site, then mapped to Tailwind via
+`@theme inline` in each project. Because that mapping uses `var()`, switching
+themes does **not** require a class rebuild: a single `data-theme` attribute on
+`<html>` is enough.
 
 > Hard rule: **never write hex/oklch directly in a component.** Use tokens. If you
 > need a new nuance, add a token; do not add a stray colour.
@@ -63,6 +64,10 @@ is enough.
 | `--overlay` | `bg-overlay` | Dialogs/palette (the only shadowed element) |
 | `--line` | `border-line` | Hairline separator |
 | `--line-strong` | `border-line-strong` | Hover line, graph edge |
+
+Dark uses true black (`#000`) with `#0a0a0a` surfaces; light uses `#fafafa` with
+white surfaces. The gap between canvas and surface is one deliberate step, never
+a gradient.
 
 ### Text
 
@@ -83,16 +88,17 @@ is enough.
 | `--danger` | `text-danger` | Failure, NOT NULL, destructive actions |
 | `--info` | `text-info` | Relationships/FK, links |
 
-The concrete values (dark & light mode) live in `:root` and `[data-theme="light"]`
-in `src/app.css`. Both are chosen so that `--faint` text stays ≥ ~4.5:1 against
-its panel background, because metadata labels are used everywhere.
+The concrete values (dark & light mode) live in `design/tokens.css`. Both are
+chosen so that `--faint` text stays ≥ ~4.5:1 against its panel background,
+because metadata labels are used everywhere.
 
 ### Other scales
 
 | Scale | Value | Note |
 | --- | --- | --- |
-| Radius | `4px` / `6px` / `10px` | controls / panels / overlays, not uniform |
-| Text size | `10.5px` label · `11–11.5px` mono data · `12–12.5px` UI · `13.5px` wordmark | mono for technical values, sans for chrome |
+| Radius | `6px` / `8px` / `12px` | controls / panels / overlays, not uniform |
+| Type | Geist Variable, Geist Mono Variable | bundled with the build, no runtime fetch |
+| Text size | `11px` label · `11–11.5px` mono data · `12–12.5px` UI · `13.5px` wordmark | mono for technical values, sans for chrome |
 | Control height | buttons `32px` (`28px` small), fields `32px` (`26px` small) | consistent so form rows do not "ripple" |
 | Shadow | only `var(--shadow-pop)` | for overlays; panels have no shadow |
 
@@ -110,7 +116,7 @@ is guaranteed and Tailwind utilities can still override them when needed.
 | `.btn`, `.btn-primary`, `.btn-ghost`, `.btn-danger`, `.btn-sm`, `.btn-icon` | Buttons; the variant = meaning, not a random colour |
 | `.field`, `.field-xs` | Inputs/selects/textareas (selects use a custom chevron) |
 | `.chip`, `.chip-accent`, `.chip-ok`, `.chip-warn`, `.chip-danger` | Status/metadata badges |
-| `.label`, `.hint` | Small uppercase labels & helper text |
+| `.label`, `.hint` | Small sentence-case labels & helper text |
 | `.data-table` | Data tables: sticky header, right-aligned numbers, selectable cells |
 | `.row-btn` | Clickable list rows (used by the table list) |
 | `.kbd` | Shortcut key display |
@@ -150,6 +156,8 @@ is guaranteed and Tailwind utilities can still override them when needed.
   fully supported.
 - The choice is stored in `localStorage` (`relaydb.theme`), and an inline script
   in `src/app.html` applies it **before the first paint** so there is no flash.
+- The marketing site reads the same key, so a visitor's choice carries over
+  between the site and the app when they share an origin.
 - UI state (theme, palette, log, shortcuts) lives in `src/lib/stores/ui.svelte.ts`
   and is separate from the domain state (`flow`, `engine`).
 
@@ -162,18 +170,18 @@ the application look like a template, not a product.
 
 | Anti-pattern | Why it is rejected | What is used instead |
 | --- | --- | --- |
-| Purple→blue gradients / blur blobs | The most characteristic "AI-made" tell; carries no meaning | One flat accent (teal) |
+| Purple→blue gradients / blur blobs | The most characteristic "AI-made" tell; carries no meaning | One flat accent (ocean blue) |
 | Glassmorphism (`backdrop-blur` everywhere) | Blurs the hierarchy, hard to read | Hairline borders + surface layers |
-| `rounded-2xl` on every element | No sharp/soft contrast | A 4/6/10 radius scale |
+| `rounded-2xl` on every element | No sharp/soft contrast | A 6/8/12 radius scale |
 | Large shadows on every card | Noisy, blurs elevation | Shadows only for overlays |
 | Emoji as icons (✨🚀⚡) | Inconsistent, cannot be `stroke`d to match the theme | One line-icon set (Lucide) |
 | Icons inside gradient boxes | Decorative without function | Bare icons, colour follows context |
-| Pill buttons everywhere | Looks like a landing page | 4px radius, square badges |
+| Pill buttons everywhere | Looks like a landing page | 6px buttons; pills only for status |
 | Glowing/pulsing status dots | Distracting, uninformative | Flat when idle, spinner only when working |
 | Cards inside cards | Nested containers with no content | One panel level, `.divider` separators |
-| Gradient text / centred hero | Marketing language, not tool language | Left-aligned panel titles sized to content |
+| Gradient text / centred hero | Marketing language, not tool language | Left-aligned panel titles sized to content (the marketing site is the one place a centred hero is allowed) |
 | Colourful palette (5+ accents) | Signals become noise | Accent + 4 semantic colours only |
-| All text the same size | No hierarchy, tiring on the eyes | A deliberate 10.5 → 13.5px scale |
+| All text the same size | No hierarchy, tiring on the eyes | A deliberate 11 → 13.5px scale |
 
 ---
 
@@ -188,3 +196,21 @@ the application look like a template, not a product.
    **succeeded**.
 6. Add an icon from Lucide (15–16px), not an emoji.
 7. Test light **and** dark theme, plus keyboard navigation (Tab/Enter/Esc).
+
+---
+
+## 9. Marketing site
+
+`website/` is a separate Vite + Svelte build for the public landing page. It
+imports the same `design/tokens.css`, so the brand cannot drift, but it follows a
+different rhythm on purpose:
+
+- Large type (`clamp` headings up to 5rem) and wide section padding, instead of
+  13px panels.
+- A centred hero, one faint grid and one blue glow. This is the only surface
+  where a centred composition is allowed; the application itself stays
+  left-aligned and dense.
+- Marketing copy lives in the components under `website/src/components/`. The
+  app's strings stay in the app, so neither build carries the other's copy.
+
+Build it with `cd website && bun run build`; the output is `website/dist`.

@@ -1,73 +1,11 @@
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
 @import "tailwindcss";
 
-/* RelayDB design tokens
-
-   Principles (see docs/DESIGN.md):
-   - One neutral family + one accent. No decorative gradients.
-   - Depth is built from hairline borders + adjacent surface layers
-     (not large drop-shadows, not blur/glassmorphism).
-   - Tiered radius scale: 4 (controls) / 6 (panels) / 10 (overlays).
-   - All colours go through tokens; no hex value is hardcoded in components.
-*/
-
-:root,
-[data-theme="dark"] {
-  color-scheme: dark;
-
-  --canvas: oklch(0.152 0.008 255);
-  --surface: oklch(0.186 0.008 255);
-  --raised: oklch(0.219 0.009 255);
-  --overlay: oklch(0.253 0.01 255);
-
-  --line: oklch(0.285 0.01 255);
-  --line-strong: oklch(0.368 0.012 255);
-
-  --ink: oklch(0.945 0.004 255);
-  --muted: oklch(0.705 0.011 255);
-  --faint: oklch(0.605 0.012 255);
-
-  --accent: oklch(0.705 0.1 181);
-  --accent-hover: oklch(0.765 0.105 181);
-  --accent-ink: oklch(0.17 0.02 181);
-
-  --ok: oklch(0.742 0.14 152);
-  --warn: oklch(0.8 0.13 78);
-  --danger: oklch(0.688 0.176 25);
-  --info: oklch(0.735 0.11 245);
-
-  --focus: oklch(0.74 0.105 181);
-  --shadow-pop: 0 10px 30px -12px oklch(0 0 0 / 0.7);
-  --shadow-inset: inset 0 1px 0 0 oklch(1 0 0 / 0.03);
-}
-
-[data-theme="light"] {
-  color-scheme: light;
-
-  --canvas: oklch(0.977 0.002 255);
-  --surface: oklch(1 0 0);
-  --raised: oklch(0.968 0.003 255);
-  --overlay: oklch(1 0 0);
-
-  --line: oklch(0.902 0.005 255);
-  --line-strong: oklch(0.826 0.008 255);
-
-  --ink: oklch(0.235 0.012 255);
-  --muted: oklch(0.486 0.011 255);
-  --faint: oklch(0.545 0.012 255);
-
-  --accent: oklch(0.5 0.1 179);
-  --accent-hover: oklch(0.44 0.104 179);
-  --accent-ink: oklch(0.99 0.004 179);
-
-  --ok: oklch(0.5 0.13 152);
-  --warn: oklch(0.58 0.125 68);
-  --danger: oklch(0.545 0.19 27);
-  --info: oklch(0.5 0.13 245);
-
-  --focus: oklch(0.5 0.1 179);
-  --shadow-pop: 0 10px 30px -14px oklch(0.2 0.02 255 / 0.28);
-  --shadow-inset: inset 0 1px 0 0 oklch(1 0 0 / 0.6);
-}
+/* Palette, type and radius scales live in design/tokens.css so the desktop app
+   and the marketing site share one source of truth. The Tailwind mapping stays
+   in this file. */
+@import "../design/tokens.css";
 
 /* Map tokens to the Tailwind system (inline -> follows runtime values, so a
    theme switch needs no class rebuild). */
@@ -88,15 +26,15 @@
   --color-warn: var(--warn);
   --color-danger: var(--danger);
   --color-info: var(--info);
+  --color-field: var(--field);
 
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 10px;
+  --radius-xs: var(--r-xs);
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
 
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI Variable Text",
-    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", "Cascadia Code",
-    "Segoe UI Mono", "Roboto Mono", Menlo, Consolas, monospace;
+  --font-sans: var(--font-ui);
+  --font-mono: var(--font-code);
 }
 
 /* Base */
@@ -140,6 +78,15 @@ code,
 }
 
 @layer base {
+  /* Vercel-style tight tracking on headings; body text keeps its natural
+     spacing because the tool is dense. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    letter-spacing: -0.02em;
+  }
+
   /* Keyboard-only focus indicator. It lives in the `base` layer on purpose: an
      unlayered rule outranks everything inside `@layer components`, so it used
      to override the more specific focus treatments below (`.field`, the command
@@ -194,12 +141,10 @@ code,
     border-top: 1px solid var(--line);
   }
 
-  /* Metadata label: small type, slightly tracked, no emoji. */
+  /* Metadata label: small, medium weight, sentence case. */
   .label {
-    font-size: 10.5px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: 500;
     color: var(--faint);
   }
 
@@ -222,7 +167,7 @@ code,
     white-space: nowrap;
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
-    background: var(--raised);
+    background: var(--surface);
     color: var(--ink);
     cursor: pointer;
     transition:
@@ -231,18 +176,18 @@ code,
       color 0.12s ease;
   }
   .btn:hover {
-    background: var(--overlay);
+    background: var(--raised);
     border-color: var(--line-strong);
   }
   .btn:active {
-    background: var(--surface);
+    background: var(--canvas);
   }
   .btn:disabled {
     opacity: 0.45;
     cursor: not-allowed;
   }
   .btn:disabled:hover {
-    background: var(--raised);
+    background: var(--surface);
     border-color: var(--line);
   }
 
@@ -303,7 +248,7 @@ code,
     width: 100%;
     height: 2rem;
     padding: 0 0.55rem;
-    background: var(--canvas);
+    background: var(--field);
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
     color: var(--ink);
@@ -407,7 +352,7 @@ code,
     padding: 0 0.3rem;
     border: 1px solid var(--line);
     border-bottom-color: var(--line-strong);
-    border-radius: 4px;
+    border-radius: var(--radius-xs);
     background: var(--raised);
     color: var(--muted);
     font-family: var(--font-mono);

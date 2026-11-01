@@ -1,0 +1,366 @@
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+@import "tailwindcss";
+@import "../../design/tokens.css";
+
+/* Marketing surface.
+
+   Shares the palette and type scale with the desktop app (design/tokens.css)
+   but deliberately uses a different rhythm: large type, wide margins and
+   section-level composition instead of dense panels. */
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-overlay: var(--overlay);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-ink: var(--accent-ink);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+  --color-info: var(--info);
+
+  --radius-xs: var(--r-xs);
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+
+  --font-sans: var(--font-ui);
+  --font-mono: var(--font-code);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    margin: 0;
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: var(--font-ui);
+    font-size: 16px;
+    line-height: 1.6;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--accent) 30%, transparent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@utility mono {
+  font-family: var(--font-code);
+  font-feature-settings: "zero" 1;
+}
+
+@layer components {
+  .shell {
+    width: 100%;
+    max-width: 1120px;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  /* Small technical kicker used above section headings. */
+  .kicker {
+    font-family: var(--font-code);
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: var(--accent);
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 1.75rem;
+    padding: 0 0.7rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--muted);
+    font-size: 12.5px;
+    font-weight: 450;
+  }
+  .eyebrow-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--accent);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    height: 2.5rem;
+    padding: 0 1rem;
+    border: 1px solid transparent;
+    border-radius: var(--r-sm);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background-color 0.15s ease,
+      border-color 0.15s ease,
+      color 0.15s ease;
+  }
+  .btn-sm {
+    height: 2rem;
+    padding: 0 0.75rem;
+    font-size: 13px;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+    font-weight: 600;
+  }
+  .btn-primary:hover {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+  }
+
+  .btn-outline {
+    background: transparent;
+    border-color: var(--line-strong);
+    color: var(--ink);
+  }
+  .btn-outline:hover {
+    background: var(--raised);
+    border-color: var(--faint);
+  }
+
+  .btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1px solid transparent;
+    border-radius: var(--r-sm);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
+  }
+  .btn-icon:hover {
+    background: var(--raised);
+    color: var(--ink);
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    height: 2rem;
+    padding: 0 0.6rem;
+    border-radius: var(--r-sm);
+    color: var(--muted);
+    font-size: 14px;
+    text-decoration: none;
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
+  }
+  .nav-link:hover {
+    background: var(--raised);
+    color: var(--ink);
+  }
+
+  .card {
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    background: var(--surface);
+    transition: border-color 0.15s ease;
+  }
+  .card:hover {
+    border-color: var(--line-strong);
+  }
+
+  .label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--faint);
+  }
+
+  .link {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--line-strong);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.15s ease;
+  }
+  .link:hover {
+    text-decoration-color: var(--accent);
+  }
+
+  /* Hero backdrop: a faint grid that fades out, plus one restrained blue
+     glow. Both are decorative and sit behind the content. */
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(
+        to right,
+        color-mix(in oklab, var(--line) 65%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in oklab, var(--line) 65%, transparent) 1px,
+        transparent 1px
+      );
+    background-size: 72px 72px;
+    mask-image: radial-gradient(ellipse 78% 65% at 50% 0%, #000 25%, transparent 78%);
+    -webkit-mask-image: radial-gradient(
+      ellipse 78% 65% at 50% 0%,
+      #000 25%,
+      transparent 78%
+    );
+  }
+  .hero-glow {
+    position: absolute;
+    left: 50%;
+    top: -18rem;
+    width: 64rem;
+    height: 34rem;
+    transform: translateX(-50%);
+    pointer-events: none;
+    background: radial-gradient(
+      closest-side,
+      color-mix(in oklab, var(--accent) 16%, transparent),
+      transparent
+    );
+  }
+  [data-theme="light"] .hero-glow {
+    opacity: 0.6;
+  }
+
+  .terminal {
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    box-shadow: var(--shadow-pop);
+  }
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    height: 2.5rem;
+    padding: 0 0.875rem;
+    border-bottom: 1px solid var(--line);
+    background: var(--raised);
+  }
+  .terminal-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 999px;
+    background: var(--line-strong);
+  }
+
+  /* FAQ disclosure */
+  details.faq {
+    border-bottom: 1px solid var(--line);
+  }
+  details.faq summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.15rem 0;
+    list-style: none;
+    cursor: pointer;
+    font-size: 15.5px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  details.faq summary::-webkit-details-marker {
+    display: none;
+  }
+  details.faq summary::after {
+    content: "+";
+    flex: none;
+    width: 1.25rem;
+    text-align: center;
+    color: var(--faint);
+    font-family: var(--font-code);
+    font-size: 16px;
+    transition: transform 0.15s ease;
+  }
+  details.faq[open] summary::after {
+    content: "−";
+  }
+  details.faq .faq-body {
+    padding: 0 0 1.25rem;
+    max-width: 46rem;
+    color: var(--muted);
+    font-size: 14.5px;
+    line-height: 1.65;
+  }
+
+  .skip-link {
+    position: absolute;
+    left: 1rem;
+    top: -3rem;
+    z-index: 100;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--r-sm);
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-size: 13px;
+    transition: top 0.15s ease;
+  }
+  .skip-link:focus {
+    top: 1rem;
+  }
+}

@@ -78,6 +78,9 @@ RelayDB-app/
 │       ├── commands/               # API surface per wizard step
 │       ├── error.rs                # AppError (error contract to the frontend)
 │       └── lib.rs                  # setup, spawn engine, shutdown
+├── website/                       # marketing site (Vite + Svelte, separate build)
+│   └── src/components/             # hero, features, security, FAQ, footer
+├── design/tokens.css              # shared palette, type & radius (app + website)
 ├── schemas/relaydb.schema.json     # JSON Schema for presets
 ├── examples/                       # example presets (local MySQL, Supabase, Turso)
 ├── scripts/                        # build-engine.ts, check-protocol.ts, check-reproducible.ts
@@ -164,6 +167,8 @@ The preset file format is described in [`docs/CONFIG-SCHEMA.md`](docs/CONFIG-SCH
 | `bun run protocol:check` | Go ↔ Rust ↔ TS contract drift guard |
 | `bun run check` | `svelte-check` (Svelte types & lint) |
 | `bun run check:all` | `engine:test` + `engine:repro` + `check` + `protocol:check` |
+| `bun run site:dev` | Marketing site dev server (`website/`) |
+| `bun run site:build` | Build the marketing site to `website/dist` |
 | `bun run tauri build` | Bundle the production application |
 
 ---
