@@ -38,7 +38,7 @@
 <section id="features" class="border-b border-line">
   <div class="shell py-20 sm:py-24">
     <div class="max-w-2xl">
-      <p class="kicker">Capabilities</p>
+      <p class="kicker">Why RelayDB</p>
       <h2 class="mt-3 text-[clamp(1.9rem,4vw,2.75rem)] font-semibold">
         Built for the awkward parts.
       </h2>
