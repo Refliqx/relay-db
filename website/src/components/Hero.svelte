@@ -1,6 +1,7 @@
 <script lang="ts">
   import { ArrowRight } from "lucide-svelte";
   import { DOCS } from "../lib/links";
+  import CodePanel from "./CodePanel.svelte";
 </script>
 
 <section id="top" class="relative overflow-hidden border-b border-line">
@@ -39,42 +40,33 @@
       </p>
     </div>
 
-    <div class="terminal mx-auto mt-14 max-w-3xl text-left">
-      <div class="terminal-bar">
-        <span class="terminal-dot"></span>
-        <span class="terminal-dot"></span>
-        <span class="terminal-dot"></span>
-        <span class="mono ml-2 text-[11px] text-faint">relaydb export</span>
-        <span class="mono ml-auto text-[11px] text-faint">exit 0</span>
-      </div>
-
-      <div class="mono overflow-x-auto p-5 text-[12.5px] leading-[2]">
+    <div class="mx-auto mt-14 max-w-3xl text-left">
+      <CodePanel title="relaydb export" meta="exit 0">
         <p class="text-ink">$ relaydb export --config relaydb.yaml</p>
 
         <div class="mt-3">
-          <p>
-            <span class="inline-block w-[5.75rem] text-accent">connect</span>
-            <span class="text-muted">postgres://…@staging</span>
-            <span class="ml-3 text-faint">read-only</span>
+          <p class="grid grid-cols-[4.75rem_1fr] gap-x-3 sm:grid-cols-[5.75rem_1fr]">
+            <span class="text-accent">connect</span>
+            <span class="text-muted">postgres://…@staging <span class="text-faint">read-only</span></span>
           </p>
-          <p>
-            <span class="inline-block w-[5.75rem] text-accent">schema</span>
+          <p class="grid grid-cols-[4.75rem_1fr] gap-x-3 sm:grid-cols-[5.75rem_1fr]">
+            <span class="text-accent">schema</span>
             <span class="text-muted">24 tables · 38 relationships</span>
           </p>
-          <p>
-            <span class="inline-block w-[5.75rem] text-accent">order</span>
+          <p class="grid grid-cols-[4.75rem_1fr] gap-x-3 sm:grid-cols-[5.75rem_1fr]">
+            <span class="text-accent">order</span>
             <span class="text-muted">acyclic · 2 cycles reported</span>
           </p>
-          <p>
-            <span class="inline-block w-[5.75rem] text-accent">mask</span>
+          <p class="grid grid-cols-[4.75rem_1fr] gap-x-3 sm:grid-cols-[5.75rem_1fr]">
+            <span class="text-accent">mask</span>
             <span class="text-muted">1,204,882 values · 16 strategies</span>
           </p>
-          <p>
-            <span class="inline-block w-[5.75rem] text-accent">prune</span>
+          <p class="grid grid-cols-[4.75rem_1fr] gap-x-3 sm:grid-cols-[5.75rem_1fr]">
+            <span class="text-accent">prune</span>
             <span class="text-muted">18,400 rows kept of 2.1M</span>
           </p>
-          <p>
-            <span class="inline-block w-[5.75rem] text-accent">export</span>
+          <p class="grid grid-cols-[4.75rem_1fr] gap-x-3 sm:grid-cols-[5.75rem_1fr]">
+            <span class="text-accent">export</span>
             <span class="text-muted">seed.sql · 48.2 MB</span>
           </p>
         </div>
@@ -84,7 +76,7 @@
           <span class="text-muted"> reproducible</span>
           <span class="text-faint"> sha256 63e61f81b08c…</span>
         </p>
-      </div>
+      </CodePanel>
     </div>
   </div>
 </section>

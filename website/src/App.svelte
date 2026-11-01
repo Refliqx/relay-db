@@ -9,6 +9,7 @@
   import Hero from "./components/Hero.svelte";
   import HowItWorks from "./components/HowItWorks.svelte";
   import Nav from "./components/Nav.svelte";
+  import Output from "./components/Output.svelte";
   import Problem from "./components/Problem.svelte";
   import Security from "./components/Security.svelte";
   import Stats from "./components/Stats.svelte";
@@ -25,6 +26,7 @@
   <Stats />
   <Features />
   <HowItWorks />
+  <Output />
   <DeepDive />
   <Comparison />
   <Security />

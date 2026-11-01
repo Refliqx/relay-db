@@ -212,5 +212,10 @@ different rhythm on purpose:
   left-aligned and dense.
 - Marketing copy lives in the components under `website/src/components/`. The
   app's strings stay in the app, so neither build carries the other's copy.
+- Code panels share one chrome (`CodePanel.svelte`): window dots, a mono
+  caption, optional copy, and line numbers for SQL. Syntax colour reuses the
+  page tokens (accent, ok, faint) rather than introducing a second palette.
+- Tables use a raised header, semibold 11px column labels and a tinted accent
+  column for the RelayDB side of the comparison.
 
 Build it with `cd website && bun run build`; the output is `website/dist`.

@@ -10,7 +10,7 @@
   ];
 </script>
 
-<section class="border-b border-line">
+<section id="comparison" class="border-b border-line">
   <div class="shell py-20 sm:py-24">
     <div class="max-w-2xl">
       <p class="kicker">Dump vs seed</p>
@@ -23,35 +23,39 @@
       </p>
     </div>
 
-    <div class="mt-10 overflow-x-auto rounded-md border border-line">
-      <table class="w-full min-w-[640px] border-collapse text-left text-[13.5px]">
-        <thead>
-          <tr class="border-b border-line bg-raised">
-            <th class="px-5 py-3 font-medium text-faint"> </th>
-            <th class="px-5 py-3 font-medium text-muted">Production dump</th>
-            <th class="px-5 py-3 font-medium text-ink">RelayDB seed</th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each rows as row}
-            <tr class="border-b border-line last:border-b-0">
-              <th class="px-5 py-3 font-normal text-faint">{row.label}</th>
-              <td class="px-5 py-3 text-muted">
-                <span class="flex items-center gap-2">
-                  <X size={14} class="shrink-0 text-danger" />
-                  {row.dump}
-                </span>
-              </td>
-              <td class="px-5 py-3 text-ink">
-                <span class="flex items-center gap-2">
-                  <Check size={14} class="shrink-0 text-ok" />
-                  {row.seed}
-                </span>
-              </td>
+    <div class="mt-10 overflow-hidden rounded-lg border border-line bg-surface">
+      <div class="overflow-x-auto">
+        <table class="w-full min-w-[640px] border-collapse text-left text-[13.5px]">
+          <thead>
+            <tr class="border-b border-line bg-raised">
+              <th class="px-5 py-3 text-[11px] font-semibold text-faint"> </th>
+              <th class="px-5 py-3 text-[11px] font-semibold text-muted">Production dump</th>
+              <th class="border-l border-line bg-accent/5 px-5 py-3 text-[11px] font-semibold text-ink">
+                RelayDB seed
+              </th>
             </tr>
-          {/each}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {#each rows as row}
+              <tr class="border-b border-line transition-colors last:border-b-0 hover:bg-raised/50">
+                <th class="px-5 py-3 font-normal text-faint">{row.label}</th>
+                <td class="px-5 py-3 text-muted">
+                  <span class="flex items-center gap-2">
+                    <X size={14} class="shrink-0 text-danger" />
+                    {row.dump}
+                  </span>
+                </td>
+                <td class="border-l border-line bg-accent/5 px-5 py-3 text-ink">
+                  <span class="flex items-center gap-2">
+                    <Check size={14} class="shrink-0 text-ok" />
+                    {row.seed}
+                  </span>
+                </td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </section>

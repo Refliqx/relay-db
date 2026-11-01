@@ -1,3 +1,7 @@
+<script lang="ts">
+  import CodePanel from "./CodePanel.svelte";
+</script>
+
 <section id="reproducible" class="border-b border-line">
   <div class="shell py-20 sm:py-24">
     <div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
@@ -19,52 +23,55 @@
         </p>
       </div>
 
-      <div class="terminal">
-        <div class="terminal-bar">
-          <span class="mono text-[11px] text-faint">relaydb export --check</span>
-          <span class="mono ml-auto text-[11px] text-faint">2 processes</span>
-        </div>
-        <div class="mono overflow-x-auto p-5 text-[12.5px] leading-[2]">
-          <p>
-            <span class="inline-block w-14 text-faint">run 1</span>
-            <span class="text-muted">63e61f81b08c1d0e…</span>
-          </p>
-          <p>
-            <span class="inline-block w-14 text-faint">run 2</span>
-            <span class="text-muted">63e61f81b08c1d0e…</span>
-          </p>
-          <p class="mt-2">
-            <span class="text-ok">✓</span>
-            <span class="text-muted"> byte-identical</span>
-          </p>
-        </div>
-      </div>
+      <CodePanel title="relaydb export --check" meta="2 processes">
+        <p>
+          <span class="inline-block w-14 text-faint">run 1</span>
+          <span class="text-muted">63e61f81b08c1d0e…</span>
+        </p>
+        <p>
+          <span class="inline-block w-14 text-faint">run 2</span>
+          <span class="text-muted">63e61f81b08c1d0e…</span>
+        </p>
+        <p class="mt-2">
+          <span class="text-ok">✓</span>
+          <span class="text-muted"> byte-identical</span>
+        </p>
+      </CodePanel>
     </div>
 
     <div class="mt-20 grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
       <div class="card order-2 overflow-hidden lg:order-1">
-        <div class="border-b border-line px-5 py-3">
-          <span class="mono text-[11px] text-faint">ada@example.com · masked</span>
+        <div class="flex items-center justify-between border-b border-line bg-raised px-5 py-2.5">
+          <span class="mono text-[11px] text-faint">masking preview</span>
+          <span class="mono text-[11px] text-faint">value-keyed</span>
         </div>
-        <div class="mono divide-y divide-line text-[12.5px]">
-          <div class="flex flex-wrap items-center gap-x-3 gap-y-1 px-5 py-3">
-            <span class="w-32 shrink-0 text-faint">users.email</span>
-            <span class="text-muted">ada@example.com</span>
-            <span class="text-faint">→</span>
-            <span class="text-accent">ada.k@example.net</span>
-          </div>
-          <div class="flex flex-wrap items-center gap-x-3 gap-y-1 px-5 py-3">
-            <span class="w-32 shrink-0 text-faint">orders.email</span>
-            <span class="text-muted">ada@example.com</span>
-            <span class="text-faint">→</span>
-            <span class="text-accent">ada.k@example.net</span>
-          </div>
-          <div class="flex flex-wrap items-center gap-x-3 gap-y-1 px-5 py-3">
-            <span class="w-32 shrink-0 text-faint">support.email</span>
-            <span class="text-muted">ada@example.com</span>
-            <span class="text-faint">→</span>
-            <span class="text-accent">ada.k@example.net</span>
-          </div>
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-[420px] border-collapse text-left text-[12.5px]">
+            <thead>
+              <tr class="border-b border-line text-[10.5px] text-faint">
+                <th class="px-5 py-2 font-semibold">Column</th>
+                <th class="px-5 py-2 font-semibold">Source</th>
+                <th class="px-5 py-2 font-semibold">Masked</th>
+              </tr>
+            </thead>
+            <tbody class="mono divide-y divide-line">
+              <tr class="transition-colors hover:bg-raised/50">
+                <td class="px-5 py-2.5 text-faint">users.email</td>
+                <td class="px-5 py-2.5 text-muted">ada@example.com</td>
+                <td class="px-5 py-2.5 text-accent">ada.k@example.net</td>
+              </tr>
+              <tr class="transition-colors hover:bg-raised/50">
+                <td class="px-5 py-2.5 text-faint">orders.email</td>
+                <td class="px-5 py-2.5 text-muted">ada@example.com</td>
+                <td class="px-5 py-2.5 text-accent">ada.k@example.net</td>
+              </tr>
+              <tr class="transition-colors hover:bg-raised/50">
+                <td class="px-5 py-2.5 text-faint">support.email</td>
+                <td class="px-5 py-2.5 text-muted">ada@example.com</td>
+                <td class="px-5 py-2.5 text-accent">ada.k@example.net</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 

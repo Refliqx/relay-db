@@ -1,6 +1,14 @@
 <script lang="ts">
   import { ArrowRight } from "lucide-svelte";
   import { DOCS, REPO } from "../lib/links";
+  import CodePanel from "./CodePanel.svelte";
+
+  const commands = [
+    "git clone https://github.com/Refliqx/relay-db.git",
+    "cd relay-db",
+    "bun install",
+    "bun run dev:all"
+  ].join("\n");
 </script>
 
 <section id="get-started" class="relative overflow-hidden border-b border-line">
@@ -18,29 +26,25 @@
       </p>
     </div>
 
-    <div class="card mx-auto mt-8 max-w-lg overflow-hidden text-left">
-      <div class="flex items-center justify-between border-b border-line bg-raised px-4 py-2">
-        <span class="mono text-[11px] text-faint">terminal</span>
-        <span class="mono text-[11px] text-faint">bash</span>
-      </div>
-      <div class="mono overflow-x-auto p-4 text-[12.5px] leading-[1.9]">
-        <p>
+    <div class="mx-auto mt-8 max-w-lg text-left">
+      <CodePanel title="terminal" meta="bash" copy={commands}>
+        <p class="grid grid-cols-[0.75rem_1fr] gap-x-2">
           <span class="text-faint">$</span>
-          <span class="text-ink"> git clone https://github.com/Refliqx/relay-db.git</span>
+          <span class="text-ink">git clone https://github.com/Refliqx/relay-db.git</span>
         </p>
-        <p>
+        <p class="grid grid-cols-[0.75rem_1fr] gap-x-2">
           <span class="text-faint">$</span>
-          <span class="text-ink"> cd relay-db</span>
+          <span class="text-ink">cd relay-db</span>
         </p>
-        <p>
+        <p class="grid grid-cols-[0.75rem_1fr] gap-x-2">
           <span class="text-faint">$</span>
-          <span class="text-ink"> bun install</span>
+          <span class="text-ink">bun install</span>
         </p>
-        <p>
+        <p class="grid grid-cols-[0.75rem_1fr] gap-x-2">
           <span class="text-faint">$</span>
-          <span class="text-ink"> bun run dev:all</span>
+          <span class="text-ink">bun run dev:all</span>
         </p>
-      </div>
+      </CodePanel>
     </div>
 
     <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
