@@ -10,7 +10,7 @@
       links: [
         { label: "Features", href: "#features" },
         { label: "How it works", href: "#how" },
-        { label: "Download", href: RELEASES }
+        { label: "Get started", href: "#get-started" }
       ]
     },
     {

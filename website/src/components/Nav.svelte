@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { Menu, Moon, Sun } from "lucide-svelte";
-  import { REPO, RELEASES } from "../lib/links";
+  import { REPO } from "../lib/links";
   import GithubMark from "./GithubMark.svelte";
   import Logo from "./Logo.svelte";
 
@@ -58,7 +58,7 @@
       >
         <GithubMark size={16} />
       </a>
-      <a class="btn btn-primary btn-sm" href={RELEASES}>Download</a>
+      <a class="btn btn-primary btn-sm" href="#get-started">Get started</a>
       <button
         class="btn-icon md:hidden"
         onclick={() => (open = !open)}

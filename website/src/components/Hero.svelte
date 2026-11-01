@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { ArrowRight, Download } from "lucide-svelte";
-  import { DOCS, RELEASES } from "../lib/links";
+  import { ArrowRight } from "lucide-svelte";
+  import { DOCS } from "../lib/links";
 </script>
 
 <section id="top" class="relative overflow-hidden border-b border-line">
@@ -25,13 +25,12 @@
       </p>
 
       <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
-        <a class="btn btn-primary" href={RELEASES}>
-          <Download size={16} />
-          Download RelayDB
+        <a class="btn btn-primary" href="#get-started">
+          Get started
+          <ArrowRight size={16} />
         </a>
         <a class="btn btn-outline" href={DOCS} target="_blank" rel="noreferrer">
           Read the docs
-          <ArrowRight size={16} />
         </a>
       </div>
 

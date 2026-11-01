@@ -22,7 +22,7 @@
     },
     {
       q: "Is it free?",
-      a: "RelayDB is MIT licensed. Download a release or build it from source with Bun, Rust and Go."
+      a: "RelayDB is MIT licensed. Build it from source with Bun, Rust and Go."
     }
   ];
 </script>
